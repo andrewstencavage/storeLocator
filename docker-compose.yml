@@ -1,20 +1,16 @@
 version: '3'
 services: 
-  db:
+  mongo:
     image: 'mongo'
-    container_name: 'mongo_container'
-    environment: 
-    - MONGO_INITDB_DATABASE=db
-    - MONGO_INITDB_ROOT_USERNAME=admin
-    - MONGO_INITDB_ROOT_PASSWORD=pass
-    volumes: 
-    - ./db/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    - ./mongo-volume:/data/db
     ports:
-    - '27017-27019:27017-27019'
-  server:
-    build: .
+    - "27017:27017"
+    volumes:
+      - /data/db
+  web:
+    image: 'astencavage/storelocator_web:1.0'
     ports: 
     - "3000:3000"
     depends_on: 
-    - db
+    - mongo
+    links:
+      - mongo
